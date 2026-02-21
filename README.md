@@ -4,7 +4,7 @@ WhiteVPN for AWG \ VLESS \ MTProto
 
 **Универсальный скрипт для настройки каскадных соединений, переадресации трафика (NAT) и ускорения сети на Linux.**
 
-Идеальное решение от **Виталии (автор канала anten-ka)** для создания "мостов" к VPN (AmneziaWG, WireGuard), Proxy (VLESS, XRay) и мессенджерам (MTProto/TProxy).
+Идеальное решение от автора канала anten-ka** для создания "мостов" к VPN (AmneziaWG, WireGuard), Proxy (VLESS, XRay) и мессенджерам (MTProto).
 
 ![Bash](https://img.shields.io/badge/Language-Bash-green)
 ![System](https://img.shields.io/badge/OS-Ubuntu%20%7C%20Debian-orange)
@@ -20,7 +20,7 @@ WhiteVPN for AWG \ VLESS \ MTProto
 * **🔀 Мультипротокольность:**
     * Поддержка **UDP** (AmneziaWG, WireGuard).
     * Поддержка **TCP** (VLESS, VMess, Reality).
-    * Поддержка **MTProto / TProxy** (Telegram).
+    * Поддержка **MTProto** (Telegram).
 * **🛠 Кастомные правила:** Возможность указывать разные порты для входа и выхода (проброс SSH, RDP и нестандартных сервисов).
 * **🌐 Мульти-туннелирование:** Создавайте 2, 5, 10 соединений на разных портах одновременно.
 * **🧠 Умная настройка:**
@@ -37,3 +37,7 @@ WhiteVPN for AWG \ VLESS \ MTProto
 
 ```bash
 wget -O install.sh [https://raw.githubusercontent.com/anten-ka/kaskad/main/install.sh](https://raw.githubusercontent.com/anten-ka/kaskad/main/install.sh) && chmod +x install.sh && ./install.sh
+
+## 🚀 Открыть меню скрипта после установки
+```bash
+gokaskad
