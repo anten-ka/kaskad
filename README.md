@@ -2,7 +2,7 @@
 
 **Универсальный скрипт для настройки каскадных соединений, переадресации трафика (NAT) и ускорения сети на Linux.**
 
-Идеальное решение от **Виталии (автор канала anten-ka)** для создания "мостов" к VPN (AmneziaWG, WireGuard), Proxy (VLESS, XRay) и мессенджерам (MTProto/TProxy).
+Идеальное решение от автора канала anten-ka для создания "мостов" к VPN (AmneziaWG, WireGuard), Proxy (VLESS, XRay) и мессенджерам (MTProto/TProxy).
 
 ![Bash](https://img.shields.io/badge/Language-Bash-green)
 ![System](https://img.shields.io/badge/OS-Ubuntu%20%7C%20Debian-orange)
