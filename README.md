@@ -37,7 +37,9 @@ WhiteVPN for AWG \ VLESS \ MTProto
 
 ```bash
 wget -O install.sh [https://raw.githubusercontent.com/anten-ka/kaskad/main/install.sh](https://raw.githubusercontent.com/anten-ka/kaskad/main/install.sh) && chmod +x install.sh && ./install.sh
+```bash
 
 ## 🚀 Открыть меню скрипта после установки
 ```bash
 gokaskad
+```bash
