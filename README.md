@@ -34,7 +34,7 @@
 Подключитесь к вашему VPS (Ubuntu/Debian) под пользователем `root` и выполните одну команду:
 
 ```bash
-wget -O install.sh [https://raw.githubusercontent.com/anten-ka/kaskad/main/install.sh](https://raw.githubusercontent.com/anten-ka/kaskad/main/install.sh) && chmod +x install.sh && ./install.sh
+wget -O install.sh https://raw.githubusercontent.com/anten-ka/kaskad/main/install.sh && chmod +x install.sh && ./install.sh
 ```
 
 ### ⚡ Последующие запуски
