@@ -31,6 +31,12 @@ check_root() {
 
 # --- ПОДГОТОВКА СИСТЕМЫ ---
 prepare_system() {
+    # Автоматическое создание глобальной команды gokaskad
+    if [ "$0" != "/usr/local/bin/gokaskad" ]; then
+        cp -f "$0" "/usr/local/bin/gokaskad"
+        chmod +x "/usr/local/bin/gokaskad"
+    fi
+
     # Включение IP Forwarding
     if ! grep -q "net.ipv4.ip_forward=1" /etc/sysctl.conf; then
         echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
@@ -57,8 +63,6 @@ prepare_system() {
 
 # --- ПРОМО БЛОК ---
 show_promo() {
-    local PROMO_LINK="https://vk.cc/ct29NQ"
-
     clear
     echo ""
     echo -e "${MAGENTA}╔══════════════════════════════════════════════════════════════╗${NC}"
@@ -66,32 +70,20 @@ show_promo() {
     echo -e "${MAGENTA}╚══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
 
-    echo -ne "${CYAN}"
-    type_text "  >>> $PROMO_LINK"
-    type_text "  >>> $PROMO_LINK"
-    type_text "  >>> $PROMO_LINK"
-    echo -ne "${NC}"
-
-    echo ""
-    echo -e "${MAGENTA}❖ •••••••••••••••••• PROMO CODES ••••••••••••••••••• ❖${NC}"
-    echo ""
-
+    echo -e "${CYAN}🌍 ЛОКАЦИИ: РФ И ЕВРОПА${NC}"
+    echo -e "${WHITE}  >>> https://vk.cc/ct29NQ${NC}"
     printf "  ${YELLOW}%-12s${NC} : ${WHITE}%s${NC}\n" "OFF60" "60% скидка на первый месяц"
-    echo -e "${BLUE}  . . . . . . . . . . . . . . . . . . . . . . . . . . ${NC}"
-    
     printf "  ${YELLOW}%-12s${NC} : ${WHITE}%s${NC}\n" "antenka20" "Буст 20% + 3% (при оплате за 3 мес)"
-    echo -e "${BLUE}  . . . . . . . . . . . . . . . . . . . . . . . . . . ${NC}"
-    
     printf "  ${YELLOW}%-12s${NC} : ${WHITE}%s${NC}\n" "antenka6" "Буст 15% + 5% (при оплате за 6 мес)"
-    echo -e "${BLUE}  . . . . . . . . . . . . . . . . . . . . . . . . . . ${NC}"
-    
     printf "  ${YELLOW}%-12s${NC} : ${WHITE}%s${NC}\n" "antenka12" "Буст 5% + 5% (при оплате за 12 мес)"
 
-    echo ""
-    echo -e "${MAGENTA}❖ •••••••••••••••••••••••••••••••••••••••••••••••••• ❖${NC}"
+    echo -e "\n${CYAN}🇧🇾 ЛОКАЦИЯ: БЕЛАРУСЬ${NC}"
+    echo -e "${WHITE}  >>> https://vk.cc/cUxAhj${NC}"
+    printf "  ${YELLOW}%-12s${NC} : ${WHITE}%s${NC}\n" "OFF60" "60% скидка на первый месяц"
 
-    echo -e "\n${YELLOW}Генерация QR-кода... (5 сек)${NC}"
-    for i in {5..1}; do
+    echo ""
+    echo -e "\n${YELLOW}Генерация QR-кода основного партнера... (3 сек)${NC}"
+    for i in {3..1}; do
         echo -ne "$i..."
         sleep 1
     done
@@ -99,9 +91,9 @@ show_promo() {
 
     echo -e "\n${WHITE}" 
     if command -v qrencode &> /dev/null; then
-        qrencode -t ANSIUTF8 "$PROMO_LINK"
+        qrencode -t ANSIUTF8 "https://vk.cc/ct29NQ"
     else
-        echo "QR-код не загрузился, используйте ссылку выше."
+        echo "QR-код не загрузился, используйте ссылки выше."
     fi
     echo -e "${NC}"
     
@@ -118,27 +110,27 @@ show_instructions() {
     echo -e "${MAGENTA}╚══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
     echo -e "${CYAN}ШАГ 1: Подготовка${NC}"
-    echo -e "У вас должны быть данные от зарубежного VPN (WireGuard/VLESS):"
+    echo -e "У вас должны быть данные от зарубежного сервера (VPN/Прокси и т.д.):"
     echo -e " - ${YELLOW}IP адрес${NC} (зарубежный)"
-    echo -e " - ${YELLOW}Порт${NC} (на котором работает VPN)"
+    echo -e " - ${YELLOW}Порт${NC} (на котором работает целевой сервис)"
     echo ""
     echo -e "${CYAN}ШАГ 2: Настройка этого сервера${NC}"
-    echo -e "1. В меню выберите пункт ${GREEN}1${NC} (для UDP/VPN) или ${GREEN}2${NC} (для TCP/Proxy)."
-    echo -e "2. Введите ${YELLOW}IP${NC} и ${YELLOW}Порт${NC} зарубежного сервера."
+    echo -e "1. Выберите нужный пункт (${GREEN}1-3${NC} для стандартных или ${GREEN}4${NC} для кастомных)."
+    echo -e "2. Введите ${YELLOW}IP${NC} и ${YELLOW}Порты${NC} (входящий и исходящий)."
     echo -e "3. Скрипт создаст 'мост' через этот VPS."
     echo ""
     echo -e "${CYAN}ШАГ 3: Настройка Клиента (Важно!)${NC}"
-    echo -e "1. Откройте приложение (AmneziaWG / WireGuard / v2rayNG)."
+    echo -e "1. Откройте приложение клиента."
     echo -e "2. В настройках соединения найдите поле ${YELLOW}Endpoint / Адрес сервера${NC}."
     echo -e "3. Замените зарубежный IP на ${GREEN}IP ЭТОГО СЕРВЕРА${NC}."
-    echo -e "4. Порт оставьте прежним."
+    echo -e "4. Если вы использовали разные порты в правиле №4, укажите Входящий порт."
     echo ""
     echo -e "${GREEN}Готово! Теперь трафик идет: Клиент -> Этот Сервер -> Зарубеж.${NC}"
     echo ""
     read -p "Нажмите Enter, чтобы вернуться в меню..."
 }
 
-# --- ЯДРО НАСТРОЙКИ ---
+# --- СТАНДАРТНАЯ НАСТРОЙКА (ПОРТ ВХОДА = ПОРТ ВЫХОДА) ---
 configure_rule() {
     local PROTO=$1
     local NAME=$2
@@ -152,11 +144,59 @@ configure_rule() {
     done
 
     while true; do
-        echo -e "Введите Порт (входной и выходной):"
+        echo -e "Введите Порт (одинаковый для входа и выхода):"
         read -p "> " PORT
         if [[ "$PORT" =~ ^[0-9]+$ ]] && [ "$PORT" -le 65535 ]; then break; fi
         echo -e "${RED}Ошибка: порт должен быть числом!${NC}"
     done
+
+    apply_iptables_rules "$PROTO" "$PORT" "$PORT" "$TARGET_IP" "$NAME"
+}
+
+# --- КАСТОМНАЯ НАСТРОЙКА (РАЗНЫЕ ПОРТЫ) ---
+configure_custom_rule() {
+    echo -e "\n${CYAN}--- 🛠 Универсальное кастомное правило ---${NC}"
+    echo -e "${WHITE}Подходит для перенаправления ЛЮБЫХ протоколов (SSH, RDP, нестандартные порты)."
+    echo -e "Позволяет сделать так, чтобы клиент подключался к одному порту,"
+    echo -e "а трафик уходил на другой порт зарубежного сервера.${NC}\n"
+
+    while true; do
+        echo -e "Выберите протокол (${YELLOW}tcp${NC} или ${YELLOW}udp${NC}):"
+        read -p "> " PROTO
+        if [[ "$PROTO" == "tcp" || "$PROTO" == "udp" ]]; then break; fi
+        echo -e "${RED}Ошибка: введите tcp или udp!${NC}"
+    done
+
+    while true; do
+        echo -e "Введите IP адрес назначения (куда отправляем трафик):"
+        read -p "> " TARGET_IP
+        if [[ -n "$TARGET_IP" ]]; then break; fi
+    done
+
+    while true; do
+        echo -e "Введите ${YELLOW}ВХОДЯЩИЙ Порт${NC} (на этом сервере):"
+        read -p "> " IN_PORT
+        if [[ "$IN_PORT" =~ ^[0-9]+$ ]] && [ "$IN_PORT" -le 65535 ]; then break; fi
+        echo -e "${RED}Ошибка: порт должен быть числом!${NC}"
+    done
+
+    while true; do
+        echo -e "Введите ${YELLOW}ИСХОДЯЩИЙ Порт${NC} (на конечном сервере):"
+        read -p "> " OUT_PORT
+        if [[ "$OUT_PORT" =~ ^[0-9]+$ ]] && [ "$OUT_PORT" -le 65535 ]; then break; fi
+        echo -e "${RED}Ошибка: порт должен быть числом!${NC}"
+    done
+
+    apply_iptables_rules "$PROTO" "$IN_PORT" "$OUT_PORT" "$TARGET_IP" "Custom Rule"
+}
+
+# --- ПРИМЕНЕНИЕ ПРАВИЛ IPTABLES ---
+apply_iptables_rules() {
+    local PROTO=$1
+    local IN_PORT=$2
+    local OUT_PORT=$3
+    local TARGET_IP=$4
+    local NAME=$5
 
     IFACE=$(ip route get 8.8.8.8 | awk -- '{printf $5}')
     if [[ -z "$IFACE" ]]; then
@@ -166,45 +206,57 @@ configure_rule() {
 
     echo -e "${YELLOW}[*] Применение правил...${NC}"
 
-    iptables -t nat -D PREROUTING -p $PROTO --dport "$PORT" -j DNAT --to-destination "$TARGET_IP:$PORT" 2>/dev/null
-    iptables -D INPUT -p $PROTO --dport "$PORT" -j ACCEPT 2>/dev/null
-    iptables -D FORWARD -p $PROTO -d "$TARGET_IP" --dport "$PORT" -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT 2>/dev/null
-    iptables -D FORWARD -p $PROTO -s "$TARGET_IP" --sport "$PORT" -m state --state ESTABLISHED,RELATED -j ACCEPT 2>/dev/null
+    # Удаление старых правил (по входящему порту)
+    iptables -t nat -D PREROUTING -p "$PROTO" --dport "$IN_PORT" -j DNAT --to-destination "$TARGET_IP:$OUT_PORT" 2>/dev/null
+    iptables -D INPUT -p "$PROTO" --dport "$IN_PORT" -j ACCEPT 2>/dev/null
+    iptables -D FORWARD -p "$PROTO" -d "$TARGET_IP" --dport "$OUT_PORT" -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT 2>/dev/null
+    iptables -D FORWARD -p "$PROTO" -s "$TARGET_IP" --sport "$OUT_PORT" -m state --state ESTABLISHED,RELATED -j ACCEPT 2>/dev/null
 
-    iptables -A INPUT -p $PROTO --dport "$PORT" -j ACCEPT
-    iptables -t nat -A PREROUTING -p $PROTO --dport "$PORT" -j DNAT --to-destination "$TARGET_IP:$PORT"
+    # Новые правила
+    iptables -A INPUT -p "$PROTO" --dport "$IN_PORT" -j ACCEPT
+    iptables -t nat -A PREROUTING -p "$PROTO" --dport "$IN_PORT" -j DNAT --to-destination "$TARGET_IP:$OUT_PORT"
     
     if ! iptables -t nat -C POSTROUTING -o "$IFACE" -j MASQUERADE 2>/dev/null; then
         iptables -t nat -A POSTROUTING -o "$IFACE" -j MASQUERADE
     fi
 
-    iptables -A FORWARD -p $PROTO -d "$TARGET_IP" --dport "$PORT" -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
-    iptables -A FORWARD -p $PROTO -s "$TARGET_IP" --sport "$PORT" -m state --state ESTABLISHED,RELATED -j ACCEPT
+    iptables -A FORWARD -p "$PROTO" -d "$TARGET_IP" --dport "$OUT_PORT" -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+    iptables -A FORWARD -p "$PROTO" -s "$TARGET_IP" --sport "$OUT_PORT" -m state --state ESTABLISHED,RELATED -j ACCEPT
 
+    # Настройка UFW если активен
     if command -v ufw &> /dev/null && ufw status | grep -q "Status: active"; then
-        ufw allow "$PORT"/$PROTO >/dev/null
+        ufw allow "$IN_PORT"/"$PROTO" >/dev/null
         sed -i 's/DEFAULT_FORWARD_POLICY="DROP"/DEFAULT_FORWARD_POLICY="ACCEPT"/' /etc/default/ufw
         ufw reload >/dev/null
     fi
 
     netfilter-persistent save > /dev/null
     
-    echo -e "${GREEN}[SUCCESS] Туннель настроен!${NC}"
-    echo -e "$PROTO: Порт $PORT -> $TARGET_IP:$PORT"
+    echo -e "${GREEN}[SUCCESS] $NAME настроен!${NC}"
+    echo -e "$PROTO: Вход $IN_PORT -> Выход $TARGET_IP:$OUT_PORT"
     read -p "Нажмите Enter для возврата в меню..."
 }
 
 # --- СПИСОК ПРАВИЛ ---
 list_active_rules() {
     echo -e "\n${CYAN}--- Активные переадресации ---${NC}"
-    echo -e "${MAGENTA}ПОРТ\tПРОТОКОЛ\tЦЕЛЬ${NC}"
+    echo -e "${MAGENTA}ПОРТ (ВХОД)\tПРОТОКОЛ\tЦЕЛЬ (IP:ВЫХОД)${NC}"
     iptables -t nat -S PREROUTING | grep "DNAT" | while read -r line ; do
         l_port=$(echo "$line" | grep -oP '(?<=--dport )\d+')
         l_proto=$(echo "$line" | grep -oP '(?<=-p )\w+')
         l_dest=$(echo "$line" | grep -oP '(?<=--to-destination )[\d\.:]+')
-        if [[ -n "$l_port" ]]; then echo -e "$l_port\t$l_proto\t\t$l_dest"; fi
+        if [[ -n "$l_port" ]]; then echo -e "$l_port\t\t$l_proto\t\t$l_dest"; fi
     done
     echo ""
+    
+    echo -e "${GREEN}💰 Задонатить каналу и автору:${NC}"
+    if command -v qrencode &> /dev/null; then
+        qrencode -t ANSIUTF8 "https://pay.cloudtips.ru/p/7410814f"
+    else
+        echo "https://pay.cloudtips.ru/p/7410814f"
+    fi
+    echo ""
+
     read -p "Нажмите Enter..."
 }
 
@@ -219,7 +271,7 @@ delete_single_rule() {
         l_dest=$(echo "$line" | grep -oP '(?<=--to-destination )[\d\.:]+')
         if [[ -n "$l_port" ]]; then
             RULES_LIST[$i]="$l_port:$l_proto:$l_dest"
-            echo -e "${YELLOW}[$i]${NC} Порт: $l_port ($l_proto) -> $l_dest"
+            echo -e "${YELLOW}[$i]${NC} Вход: $l_port ($l_proto) -> Выход: $l_dest"
             ((i++))
         fi
     done < <(iptables -t nat -S PREROUTING | grep "DNAT")
@@ -234,15 +286,18 @@ delete_single_rule() {
     read -p "Номер правила для удаления (0 отмена): " rule_num
     if [[ "$rule_num" == "0" || -z "${RULES_LIST[$rule_num]}" ]]; then return; fi
 
+    # Разбираем строку
     IFS=':' read -r d_port d_proto d_dest <<< "${RULES_LIST[$rule_num]}"
+    local target_ip="${d_dest%:*}"
+    local target_port="${d_dest#*:}"
     
     iptables -t nat -D PREROUTING -p "$d_proto" --dport "$d_port" -j DNAT --to-destination "$d_dest" 2>/dev/null
     iptables -D INPUT -p "$d_proto" --dport "$d_port" -j ACCEPT 2>/dev/null
-    iptables -D FORWARD -p "$d_proto" -d "${d_dest%:*}" --dport "$d_port" -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT 2>/dev/null
-    iptables -D FORWARD -p "$d_proto" -s "${d_dest%:*}" --sport "$d_port" -m state --state ESTABLISHED,RELATED -j ACCEPT 2>/dev/null
+    iptables -D FORWARD -p "$d_proto" -d "$target_ip" --dport "$target_port" -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT 2>/dev/null
+    iptables -D FORWARD -p "$d_proto" -s "$target_ip" --sport "$target_port" -m state --state ESTABLISHED,RELATED -j ACCEPT 2>/dev/null
     
     netfilter-persistent save > /dev/null
-    echo -e "${GREEN}[OK] Удалено.${NC}"
+    echo -e "${GREEN}[OK] Правило удалено.${NC}"
     read -p "Нажмите Enter..."
 }
 
@@ -286,11 +341,13 @@ show_menu() {
         
         echo -e "1) Настроить ${CYAN}AmneziaWG / WireGuard${NC} (UDP)"
         echo -e "2) Настроить ${CYAN}VLESS / XRay${NC} (TCP)"
-        echo -e "3) Посмотреть активные правила"
-        echo -e "4) ${RED}Удалить одно правило${NC}"
-        echo -e "5) ${RED}Сбросить ВСЕ настройки${NC}"
-        echo -e "6) ${YELLOW}Показать PROMO${NC}"
-        echo -e "7) ${MAGENTA}📚 ИНСТРУКЦИЯ (Как настроить)${NC}" 
+        echo -e "3) Настроить ${CYAN}TProxy / MTProto${NC} (TCP)"
+        echo -e "4) 🛠 Создать ${YELLOW}Кастомное правило${NC} (Разные порты, SSH, RDP...)"
+        echo -e "5) Посмотреть активные правила"
+        echo -e "6) ${RED}Удалить одно правило${NC}"
+        echo -e "7) ${RED}Сбросить ВСЕ настройки${NC}"
+        echo -e "8) ${YELLOW}Показать PROMO${NC}"
+        echo -e "9) ${MAGENTA}📚 ИНСТРУКЦИЯ (Как настроить)${NC}" 
         echo -e "0) Выход"
         echo -e "------------------------------------------------------"
         read -p "Ваш выбор: " choice
@@ -298,11 +355,13 @@ show_menu() {
         case $choice in
             1) configure_rule "udp" "AmneziaWG" ;;
             2) configure_rule "tcp" "VLESS" ;;
-            3) list_active_rules ;;
-            4) delete_single_rule ;;
-            5) flush_rules ;;
-            6) show_promo ;;
-            7) show_instructions ;;
+            3) configure_rule "tcp" "MTProto/TProxy" ;;
+            4) configure_custom_rule ;;
+            5) list_active_rules ;;
+            6) delete_single_rule ;;
+            7) flush_rules ;;
+            8) show_promo ;;
+            9) show_instructions ;;
             0) exit 0 ;;
             *) ;;
         esac
